@@ -182,3 +182,40 @@ class WorkflowGuide:
             "workflow_steps": len(cls.WORKFLOW_STEPS),
             "achievement_names": [a.name for a in available],
         }
+
+    @classmethod
+    def get_achievement_progress(cls) -> list[dict[str, object]]:
+        """
+        Return a structured progress report for each achievement.
+
+        Each entry contains:
+        - name: Achievement name
+        - status: Status label string
+        - requirement: Earning requirement description
+        - tier: Optional tier progression string
+        - notes: Additional context
+
+        Returns:
+            A list of dicts, one per achievement, ordered by status.
+        """
+        order = {
+            AchievementStatus.AVAILABLE: 0,
+            AchievementStatus.CONDITIONAL: 1,
+            AchievementStatus.VERIFIED: 2,
+            AchievementStatus.HISTORICAL: 3,
+        }
+        sorted_achievements = sorted(
+            cls.ACHIEVEMENTS,
+            key=lambda a: order.get(a.status, 99),
+        )
+        return [
+            {
+                "name": a.name,
+                "status": a.status.value,
+                "requirement": a.requirement,
+                "tier": a.tier or "—",
+                "notes": a.notes,
+            }
+            for a in sorted_achievements
+        ]
+
