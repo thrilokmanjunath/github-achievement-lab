@@ -44,7 +44,7 @@ The project is also a sandbox for legitimately earning GitHub profile achievemen
 
 ```bash
 # Clone the repository
-git clone https://github.com/thrilokm/github-achievement-lab.git
+git clone https://github.com/thrilokmanjunath/github-achievement-lab.git
 cd github-achievement-lab
 
 # Create a virtual environment
@@ -67,11 +67,14 @@ achievement-lab calculate 2 10 --operation power
 
 # Available operations: add | subtract | multiply | divide | power
 
+# View calculation history for the current session
+achievement-lab history
+
 # Show project status
 achievement-lab status
 
-# Show the GitHub PR workflow
-achievement-lab workflow
+# Show the verbose achievement progress table
+achievement-lab status --verbose
 
 # Show achievement guide
 achievement-lab achievements
