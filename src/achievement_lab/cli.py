@@ -41,11 +41,18 @@ BANNER = f"""
 """
 
 
+# ─── Shared session state ────────────────────────────────────────────────────
+
+# A single Calculator instance is shared for the lifetime of the process
+# so that `history` can display operations performed in the same invocation.
+_SESSION_CALC: Calculator = Calculator()
+
+
 # ─── Sub-command handlers ────────────────────────────────────────────────────
 
 def cmd_calculate(args: argparse.Namespace) -> int:
     """Handle the `calculate` sub-command."""
-    calc = Calculator()
+    calc = _SESSION_CALC
     try:
         # Parse and validate operands independently for precise error messages
         def _parse_operand(raw: str, label: str) -> float:
@@ -174,6 +181,32 @@ def cmd_achievements(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_history(args: argparse.Namespace) -> int:
+    """
+    Handle the `history` sub-command — display session calculation history.
+
+    Shows all arithmetic operations performed in the current session,
+    numbered with the full expression and result. Prints a friendly
+    message if no operations have been performed yet.
+    """
+    print(BANNER)
+    history = _SESSION_CALC.history
+
+    if not history:
+        print(_c(DIM, "  No calculations performed in this session yet.\n"))
+        print(f"  Try: {_c(YELLOW, 'achievement-lab calculate 10 20')}")
+        print(f"  Then run {_c(YELLOW, 'achievement-lab history')} to see results.\n")
+        return 0
+
+    print(_c(BOLD, f"  📋 Session History ({len(history)} operation(s))\n"))
+    for idx, entry in enumerate(history, start=1):
+        operation = str(entry.get("operation", ""))
+        result = entry.get("result", "")
+        print(f"  {_c(DIM, str(idx) + '.')}  {_c(CYAN, operation):<30} = {_c(GREEN, str(result))}")
+    print()
+    return 0
+
+
 def cmd_about(args: argparse.Namespace) -> int:
     """Handle the `about` sub-command."""
     print(BANNER)
@@ -187,7 +220,7 @@ def cmd_about(args: argparse.Namespace) -> int:
         "    • Issue tracking and releases\n"
         "    • Co-authored contributions\n"
         "    • Open-source documentation practices\n\n"
-        f"  Repository: https://github.com/thrilokm/github-achievement-lab\n"
+        f"  Repository: https://github.com/thrilokmanjunath/github-achievement-lab\n"
         f"  Version   : {__version__}\n"
         f"  License   : MIT\n"
     )
@@ -207,6 +240,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  achievement-lab calculate 10 20\n"
             "  achievement-lab calculate 10 4 --operation divide\n"
             "  achievement-lab calculate 2 8 --operation power\n"
+            "  achievement-lab history\n"
             "  achievement-lab status\n"
             "  achievement-lab workflow\n"
             "  achievement-lab achievements\n"
@@ -258,6 +292,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Show GitHub achievement guide and requirements",
     )
     ach_parser.set_defaults(func=cmd_achievements)
+
+    # ── history ───────────────────────────────────────────────────────────────
+    history_parser = sub.add_parser(
+        "history",
+        help="Show session calculation history",
+    )
+    history_parser.set_defaults(func=cmd_history)
 
     # ── about ─────────────────────────────────────────────────────────────────
     about_parser = sub.add_parser("about", help="About this project")
