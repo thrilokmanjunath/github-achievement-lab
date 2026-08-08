@@ -47,15 +47,25 @@ def cmd_calculate(args: argparse.Namespace) -> int:
     """Handle the `calculate` sub-command."""
     calc = Calculator()
     try:
-        # Parse and validate operands
+        # Parse and validate operands independently for precise error messages
+        def _parse_operand(raw: str, label: str) -> float:
+            try:
+                return float(raw)
+            except ValueError:
+                print(
+                    _c(RED, f"✗ Error: {label} argument {raw!r} is not a valid number."),
+                    file=sys.stderr,
+                )
+                print(
+                    _c(DIM, f"  Usage: achievement-lab calculate <number> <number> [--operation OP]"),
+                    file=sys.stderr,
+                )
+                raise
+
         try:
-            a = float(args.a)
-            b = float(args.b)
+            a = _parse_operand(args.a, "first")
+            b = _parse_operand(args.b, "second")
         except ValueError:
-            print(
-                _c(RED, f"✗ Error: '{args.a}' and '{args.b}' must be valid numbers."),
-                file=sys.stderr,
-            )
             return 2
 
         op = args.operation.lower()
