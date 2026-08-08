@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "github-achievement-lab"
+version = "1.0.0"
+description = "Learn professional GitHub workflows through a real, working Python project"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Thrilok Manjunath", email = "ankushthrilok@gmail.com" }]
+keywords = ["github", "git", "workflows", "cli", "open-source", "learning"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Version Control :: Git",
+    "Topic :: Utilities",
+]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/thrilokm/github-achievement-lab"
+Repository = "https://github.com/thrilokm/github-achievement-lab"
+"Bug Tracker" = "https://github.com/thrilokm/github-achievement-lab/issues"
+Changelog = "https://github.com/thrilokm/github-achievement-lab/blob/main/CHANGELOG.md"
+
+[project.scripts]
+achievement-lab = "achievement_lab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["achievement_lab"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = true
