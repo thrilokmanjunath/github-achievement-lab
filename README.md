@@ -2,7 +2,7 @@
 
 > **Learn professional GitHub workflows through a real, working Python project.**
 
-[![CI](https://github.com/thrilokm/github-achievement-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/thrilokm/github-achievement-lab/actions/workflows/ci.yml)
+[![CI](https://github.com/thrilokmanjunath/github-achievement-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/thrilokmanjunath/github-achievement-lab/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
