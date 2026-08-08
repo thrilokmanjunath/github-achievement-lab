@@ -110,10 +110,37 @@ def cmd_status(args: argparse.Namespace) -> int:
     print(f"  {'Historical (no longer earnable)':<28} {status['historical_achievements']}")
     print(f"  {'Workflow steps documented':<28} {status['workflow_steps']}")
     print()
-    print(_c(BOLD, "  🏆 Earnable Achievements:"))
-    for name in status["achievement_names"]:
-        print(f"    • {name}")
-    print()
+
+    if getattr(args, "verbose", False):
+        # Print a detailed achievement progress table
+        print(_c(BOLD, "  🏆 Achievement Progress Table\n"))
+        col_name = 22
+        col_status = 16
+        col_tier = 24
+        header = (
+            f"  {'Achievement':<{col_name}} {'Status':<{col_status}} "
+            f"{'Tier Progression':<{col_tier}} Requirement"
+        )
+        print(_c(CYAN, header))
+        print(_c(DIM, "  " + "─" * 90))
+
+        for item in WorkflowGuide.get_achievement_progress():
+            name = str(item["name"])[:col_name]
+            s = str(item["status"])
+            # Strip emoji for width calculation
+            status_clean = s[:col_status]
+            tier = str(item["tier"])[:col_tier]
+            req = str(item["requirement"])[:50]
+            print(f"  {name:<{col_name}} {status_clean:<{col_status}} {tier:<{col_tier}} {req}")
+        print()
+    else:
+        print(_c(BOLD, "  🏆 Earnable Achievements:"))
+        for name in status["achievement_names"]:
+            print(f"    • {name}")
+        print()
+        print(_c(DIM, "  Tip: Run `achievement-lab status --verbose` for a detailed progress table."))
+        print()
+
     return 0
 
 
@@ -213,6 +240,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     # ── status ──────────────────────────────────────────────────────────────
     status_parser = sub.add_parser("status", help="Show project status report")
+    status_parser.add_argument(
+        "-V", "--verbose",
+        action="store_true",
+        help="Show full achievement progress table",
+    )
     status_parser.set_defaults(func=cmd_status)
 
     # ── workflow ─────────────────────────────────────────────────────────────
